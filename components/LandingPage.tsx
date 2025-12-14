@@ -346,7 +346,7 @@ const LandingPage: React.FC = () => {
                                                 type="text"
                                                 id="name"
                                                 className="w-full bg-[#F9F8F4] border border-stone-200 rounded-lg px-4 py-3 text-stone-800 focus:outline-none focus:border-nobel-gold focus:ring-1 focus:ring-nobel-gold transition-all"
-                                                placeholder="John Doe"
+                                                placeholder="Sanjay"
                                             />
                                         </div>
 
@@ -357,7 +357,7 @@ const LandingPage: React.FC = () => {
                                                 type="email"
                                                 id="email"
                                                 className="w-full bg-[#F9F8F4] border border-stone-200 rounded-lg px-4 py-3 text-stone-800 focus:outline-none focus:border-nobel-gold focus:ring-1 focus:ring-nobel-gold transition-all"
-                                                placeholder="john@company.com"
+                                                placeholder="contact@indxai.tech"
                                             />
                                         </div>
 
