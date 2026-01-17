@@ -101,7 +101,7 @@ const LandingPage: React.FC = () => {
                             </button>
                             <div className="absolute top-full left-0 mt-0 w-56 bg-white border border-stone-200 shadow-xl rounded-sm py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 translate-y-2 group-hover:translate-y-0">
                                 <div className="w-full h-2 absolute -top-2 left-0 bg-transparent"></div> {/* Bridge for hover */}
-                                <a href="#" onClick={handleProductClick} className="block px-4 py-3 text-sm text-stone-600 hover:bg-stone-100 hover:text-stone-900 transition-colors border-b border-stone-100 text-left">EulerLM v.1</a>
+                                <a href="https://pilvae.indxai.tech/" target="_blank" rel="noopener noreferrer" className="block px-4 py-3 text-sm text-stone-600 hover:bg-stone-100 hover:text-stone-900 transition-colors border-b border-stone-100 text-left">EulerLM v.1</a>
                                 <a href="https://www.token-pilot.app/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 px-4 py-3 text-sm text-stone-600 hover:bg-stone-100 hover:text-stone-900 transition-colors text-left">
                                     <img src="/tokenpilot-logo.png" alt="TokenPilot" className="w-5 h-5 object-contain" />
                                     TokenPilot
@@ -139,7 +139,7 @@ const LandingPage: React.FC = () => {
                 <div className="fixed inset-0 z-40 bg-[#F9F8F4] flex flex-col items-center justify-center gap-6 text-xl font-serif animate-fade-in">
                     <div className="flex flex-col items-center gap-4 pb-4 border-b border-stone-300 w-56">
                         <span className="text-stone-400 text-sm uppercase tracking-widest font-sans font-bold">Products</span>
-                        <a href="#" onClick={handleProductClick} className="hover:text-stone-900 transition-colors cursor-pointer">EulerLM v.1</a>
+                        <a href="https://pilvae.indxai.tech/" target="_blank" rel="noopener noreferrer" className="hover:text-stone-900 transition-colors cursor-pointer">EulerLM v.1</a>
                         <a href="https://www.token-pilot.app/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-stone-900 transition-colors cursor-pointer">
                             <img src="/tokenpilot-logo.png" alt="TokenPilot" className="w-5 h-5 object-contain" />
                             TokenPilot
