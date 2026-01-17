@@ -24,7 +24,7 @@ const LoginPage: React.FC = () => {
             });
 
             if (error) throw error;
-            navigate('/');
+            navigate('/dashboard');
         } catch (err: any) {
             setError(err.message);
         } finally {
@@ -114,6 +114,13 @@ const LoginPage: React.FC = () => {
                             }
                             label="Continue with Microsoft"
                         />
+                        <button
+                            type="button"
+                            onClick={() => navigate('/dashboard')}
+                            className="flex items-center justify-center gap-3 w-full bg-stone-900/5 border border-stone-200 text-stone-600 font-bold uppercase tracking-widest text-xs py-3 px-4 rounded-lg hover:bg-stone-900/10 transition-all border-dashed"
+                        >
+                            <span className="text-stone-500">Skip Login (Demo Mode)</span>
+                        </button>
                     </div>
 
                     <div className="relative flex items-center justify-center mb-8">

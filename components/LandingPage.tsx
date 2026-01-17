@@ -6,19 +6,36 @@
 import React, { useState, useEffect } from 'react';
 import { HeroScene, QuantumComputerScene } from './QuantumScene';
 import { SurfaceCodeDiagram, TransformerDecoderDiagram, PerformanceMetricDiagram } from './Diagrams';
-import { ArrowDown, Menu, X, BookOpen, Layers, Send, Check, Github, Linkedin, Mail, ChevronDown } from 'lucide-react';
+import { ArrowDown, Menu, X, BookOpen, Layers, Send, Check, Github, Linkedin, Mail, ChevronDown, LayoutDashboard } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { supabase } from '../lib/supabase';
 
 const LandingPage: React.FC = () => {
     const [scrolled, setScrolled] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
     const [formState, setFormState] = useState<'idle' | 'submitting' | 'success'>('idle');
+    const [session, setSession] = useState<any>(null);
     const navigate = useNavigate();
 
     useEffect(() => {
         const handleScroll = () => setScrolled(window.scrollY > 50);
         window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
+
+        // Check active session
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            setSession(session);
+        });
+
+        const {
+            data: { subscription },
+        } = supabase.auth.onAuthStateChange((_event, session) => {
+            setSession(session);
+        });
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+            subscription.unsubscribe();
+        };
     }, []);
 
     const scrollToSection = (id: string) => (e: React.MouseEvent) => {
@@ -49,8 +66,17 @@ const LandingPage: React.FC = () => {
 
     const handleProductClick = (e: React.MouseEvent) => {
         e.preventDefault();
-        // Requirement: "when the user try to use the product means then only u should ask for login"
-        navigate('/login');
+        // Since we have the playground now, we can direct them there if they are 'logged in' (conceptually)
+        // For now, let's keep the login flow:
+        navigate(session ? '/dashboard/playground' : '/login');
+    };
+
+    const handleGetStarted = () => {
+        if (session) {
+            navigate('/dashboard');
+        } else {
+            navigate('/signup');
+        }
     };
 
     return (
@@ -73,10 +99,13 @@ const LandingPage: React.FC = () => {
                                 Products
                                 <ChevronDown size={14} className="group-hover:rotate-180 transition-transform duration-200" />
                             </button>
-                            <div className="absolute top-full left-0 mt-0 w-48 bg-white border border-stone-200 shadow-xl rounded-sm py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 translate-y-2 group-hover:translate-y-0">
+                            <div className="absolute top-full left-0 mt-0 w-56 bg-white border border-stone-200 shadow-xl rounded-sm py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 translate-y-2 group-hover:translate-y-0">
                                 <div className="w-full h-2 absolute -top-2 left-0 bg-transparent"></div> {/* Bridge for hover */}
-                                <a href="#" onClick={handleProductClick} className="block px-4 py-3 text-sm text-stone-600 hover:bg-stone-100 hover:text-stone-900 transition-colors border-b border-stone-100 last:border-0 text-left">EulerLM v.1</a>
-
+                                <a href="#" onClick={handleProductClick} className="block px-4 py-3 text-sm text-stone-600 hover:bg-stone-100 hover:text-stone-900 transition-colors border-b border-stone-100 text-left">EulerLM v.1</a>
+                                <a href="https://www.token-pilot.app/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 px-4 py-3 text-sm text-stone-600 hover:bg-stone-100 hover:text-stone-900 transition-colors text-left">
+                                    <img src="/tokenpilot-logo.png" alt="TokenPilot" className="w-5 h-5 object-contain" />
+                                    TokenPilot
+                                </a>
                             </div>
                         </div>
 
@@ -85,6 +114,11 @@ const LandingPage: React.FC = () => {
                         <a href="#contact" onClick={scrollToSection('contact')} className="hover:text-stone-900 transition-colors cursor-pointer uppercase">Contact</a>
 
                         <div className="ml-4 flex items-center gap-4">
+                            {session && (
+                                <button onClick={() => navigate('/dashboard')} className="hidden lg:flex items-center gap-2 px-4 py-2 bg-stone-100 text-stone-600 text-xs font-bold uppercase tracking-widest rounded-full hover:bg-stone-200 transition-all">
+                                    <LayoutDashboard size={14} /> Dash
+                                </button>
+                            )}
                             <button onClick={() => navigate('/login')} className="px-5 py-2 border border-stone-300 bg-transparent hover:bg-stone-100 text-stone-600 text-xs font-bold uppercase tracking-widest rounded-full transition-all">
                                 Login
                             </button>
@@ -103,9 +137,13 @@ const LandingPage: React.FC = () => {
             {/* Mobile Menu */}
             {menuOpen && (
                 <div className="fixed inset-0 z-40 bg-[#F9F8F4] flex flex-col items-center justify-center gap-6 text-xl font-serif animate-fade-in">
-                    <div className="flex flex-col items-center gap-4 pb-4 border-b border-stone-300 w-48">
+                    <div className="flex flex-col items-center gap-4 pb-4 border-b border-stone-300 w-56">
                         <span className="text-stone-400 text-sm uppercase tracking-widest font-sans font-bold">Products</span>
                         <a href="#" onClick={handleProductClick} className="hover:text-stone-900 transition-colors cursor-pointer">EulerLM v.1</a>
+                        <a href="https://www.token-pilot.app/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-stone-900 transition-colors cursor-pointer">
+                            <img src="/tokenpilot-logo.png" alt="TokenPilot" className="w-5 h-5 object-contain" />
+                            TokenPilot
+                        </a>
                     </div>
 
                     <a href="#science" onClick={scrollToSection('science')} className="hover:text-stone-900 transition-colors cursor-pointer uppercase">Solutions</a>
@@ -113,6 +151,11 @@ const LandingPage: React.FC = () => {
                     <a href="#contact" onClick={scrollToSection('contact')} className="hover:text-stone-900 transition-colors cursor-pointer uppercase">Contact</a>
 
                     <div className="flex flex-col gap-4 mt-4 w-48">
+                        {session && (
+                            <button onClick={() => navigate('/dashboard')} className="w-full px-5 py-3 bg-stone-900 text-white text-xs font-bold uppercase tracking-widest rounded-full hover:bg-stone-800 transition-all shadow-md">
+                                Go to Dashboard
+                            </button>
+                        )}
                         <button onClick={() => navigate('/login')} className="w-full px-5 py-3 border border-stone-300 bg-transparent hover:bg-white text-stone-800 text-xs font-bold uppercase tracking-widest rounded-full transition-all">
                             Login
                         </button>
@@ -178,9 +221,9 @@ const LandingPage: React.FC = () => {
                     </p>
 
                     <div className="flex flex-col items-center gap-10 justify-center">
-                        <a href="#contact" onClick={scrollToSection('contact')} className="px-10 py-4 bg-stone-900 text-white text-xs font-bold uppercase tracking-widest rounded-full hover:bg-stone-800 transition-all shadow-lg hover:shadow-xl hover:-translate-y-1">
+                        <button onClick={handleGetStarted} className="px-10 py-4 bg-stone-900 text-white text-xs font-bold uppercase tracking-widest rounded-full hover:bg-stone-800 transition-all shadow-lg hover:shadow-xl hover:-translate-y-1">
                             Get Started
-                        </a>
+                        </button>
 
                         <a href="#introduction" onClick={scrollToSection('introduction')} className="group flex flex-col items-center gap-2 text-sm font-medium text-stone-500 hover:text-stone-900 transition-colors cursor-pointer">
                             <span>EXPLORE THE MATH</span>
